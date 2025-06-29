@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+        IMAGE_NAME = 'eschonau/git-tutorial3'
+    }
     stages {
         stage('Clean Workspace') {
             steps {
@@ -13,15 +15,9 @@ pipeline {
                 checkout scm
             }
         }
-
-    environment {
-        IMAGE_NAME = 'eschonau/git-tutorial3'
-    }
-    stages {
         stage('Checkout') {
             steps {
                 deleteDir()  // wipes the workspace clean
-                checkout scm
                 git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3'
             }
         }
