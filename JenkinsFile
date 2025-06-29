@@ -2,19 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Checkout Code') {
             steps {
-                echo 'Building the app '
+                git 'https://github.com/Emmy-S-300/git-tutorial3'
+            }
+        }
+        stage('Build'){
+            steps {
+                sh 'echo "building the app"'
             }
         }
         stage('Test'){
             steps {
-                echo 'running tests'
+                sh 'echo 'Deploying the app''
             }
         }
         stage('Deploy'){
             steps {
-                echo 'Deploying the app'
+                sh 'echo "deploying"'
             }
         }
     }
