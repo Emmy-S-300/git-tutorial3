@@ -8,10 +8,10 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ..
+COPY . .
 
 # Expose porst Flask runs on
 Expose 5000
 
 #run the application
-CMD["python", "app.py"]
+CMD ["python", "app.py"]
