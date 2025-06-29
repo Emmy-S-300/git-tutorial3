@@ -24,7 +24,7 @@ pipeline {
         }
     }
     post{
-        sucess{
+        success{
             bat 'echo "build successful"'
         }
         failure{
