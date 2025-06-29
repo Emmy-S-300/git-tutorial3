@@ -6,6 +6,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                deleteDir()  // wipes the workspace clean
+                checkout scm
                 git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3'
             }
         }
