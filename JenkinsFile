@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3'
+                git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3'
             }
         }
         stage('Build Docker Image'){
