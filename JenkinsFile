@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment{
-        IMAGE_NAME - 'eschonau/git-tutorial3'
+        IMAGE_NAME = 'eschonau/git-tutorial3'
     }
     stages {
         stage('Checkout') {
