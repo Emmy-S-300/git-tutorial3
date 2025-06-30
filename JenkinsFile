@@ -1,31 +1,33 @@
 pipeline {
     agent any
-    environment {
-        AWS_REGION = 'us-east-2'
-        ECR_REPO = '745490702538.dkr.ecr.us-east-2.amazonaws.com/test'
-    }
-    stages {
-        stage('Login to AWS ECR') {
-            steps {
-                withAWS(region: 'us-east-2', credentials: 'aws-creds') {
-                sh '''
-                aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 745490702538.dkr.ecr.us-east-2.amazonaws.com/test
-                '''
-                    }   
-                }
-            }
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                docker build -t $ECR_REPO:latest .
-                '''
+    stages{
+        stage('checkout'){
+            steps{
+                git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3'
             }
         }
-        stage('Push Docker Image') {
-            steps {
-                sh '''
-                docker push $ECR_REPO:latest
-                '''
+        stage('Login to ECR'){
+            steps{
+                withAWS(region: 'us-east-2', credentials, 'aws-creds')
+                powershell """
+                $password - aws ecr get-login-password -- region us-east-2
+                docker login --username AWS --password $password 745490702538.dkr.ecr.us-east-2.amazonaws.com/test
+                """ 
+            }
+        }
+       stage('building docker image'){
+            steps{
+                powershell """
+                docker build -t test:django
+                docker tag test:django 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:django
+                """
+            }
+        }
+        stage('pushing image to ECR'){
+            steps{
+                powershell """
+                docker push 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:django
+                """
             }
         }
     }
