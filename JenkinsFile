@@ -9,16 +9,16 @@ pipeline{
                 git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3.git'
             }
         }
-        stage{
+        stage('Set up VENV'){
             steps{
                 bat 'python -m venv %VENV%'
                 bat '%VENV%\\Scripts\\python -m pip install --upgrade pip'
                 bat '%VENV%\\Scripts\\pip install -r requierments.txt'
             }
         }
-        stage{
-            steps('run the test'){
-                bat'%VENV%\\Scripts\\python mangae.py test'
+        stage('run the test'){
+            steps{
+                bat '%VENV%\\Scripts\\pip install -r requirements.txt'
             }
         }
     }
