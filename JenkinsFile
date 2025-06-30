@@ -9,16 +9,16 @@ pipeline {
         stage('Login to ECR'){
             steps{
                 withAWS(region: 'us-east-2', credentials: 'aws-creds'){
-                powershell """
-                \$password - aws ecr get-login-password -- region us-east-2
-                docker login --username AWS --password \$password 745490702538.dkr.ecr.us-east-2.amazonaws.com/test
+                sh """
+                $password - aws ecr get-login-password -- region us-east-2
+                docker login --username AWS --password $password 745490702538.dkr.ecr.us-east-2.amazonaws.com/test
                 """ 
                 }
             }
         }
        stage('building docker image'){
             steps{
-                powershell """
+                sh """
                 docker build -t test:django
                 docker tag test:django 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:django
                 """
@@ -26,7 +26,7 @@ pipeline {
         }
         stage('pushing image to ECR'){
             steps{
-                powershell """
+                sh """
                 docker push 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:django
                 """
             }
