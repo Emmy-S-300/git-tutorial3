@@ -1,8 +1,8 @@
 # Use official Python image
 FROM python:3.10-slim
 
-ENV PYTHONDONTWRITEBYTECODE-1
-ENV PYTHONUNBUFFERED-1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 #set working directory
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN pip install --upgrade pip \
 COPY . /app/
 
 # Expose porst Flask runs on
-Expose 8000
+EXPOSE 8000
 
 #run the application
 CMD ["python", "manage.py", "runserver"]
