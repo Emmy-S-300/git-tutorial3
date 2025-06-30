@@ -4,7 +4,7 @@ pipeline {
         VENV = 'venv'
     }
     stages {
-        stage('Check out') {
+        stage('Check out git') {
             steps {
                 git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3.git'
             }
@@ -18,7 +18,7 @@ pipeline {
         }
         stage('Run the test') {
             steps {
-                sh './$VENV/bin/python -m unittest discover'
+                sh './$VENV/bin/python -m unittest discover -s tests'
             }
         }
     }
