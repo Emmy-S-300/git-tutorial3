@@ -1,24 +1,24 @@
-pipeline{
+pipeline {
     agent any
-    environment{
+    environment {
         VENV = 'venv'
     }
-    stages{
-        stage('Check out'){
-            steps{
+    stages {
+        stage('Check out') {
+            steps {
                 git branch: 'master', url: 'https://github.com/Emmy-S-300/git-tutorial3.git'
             }
         }
-        stage('Set up VENV'){
-            steps{
+        stage('Set up VENV') {
+            steps {
                 sh 'python3 -m venv $VENV'
-                sh './$VENV\\Scripts\\python -m pip install --upgrade pip'
-                sh './$VENV\\Scripts\\pip install -r requirements.txt'
+                sh './$VENV/bin/pip install --upgrade pip'
+                sh './$VENV/bin/pip install -r requirements.txt'
             }
         }
-        stage('run the test'){
-            steps{
-                sh './$VENV\\Scripts\\pip install -r requirements.txt'
+        stage('Run the test') {
+            steps {
+                sh './$VENV/bin/python -m unittest discover'
             }
         }
     }
