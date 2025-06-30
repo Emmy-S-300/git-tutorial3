@@ -19,7 +19,7 @@ pipeline {
        stage('building docker image'){
             steps{
                 sh """
-                docker build -t test:django
+                docker build -t test:django .
                 docker tag test:django 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:django
                 """
             }
