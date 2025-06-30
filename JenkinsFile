@@ -2,9 +2,10 @@ pipeline{
     agent any
 
     environment{
-        AWS_REGION = 'ap-south-1'
+        AWS_REGION = 'us-east-2'
         IMAGE_NAME = 'git-tutorial3'
         REPO_NAME = 'test'
+        IMAGE_TAG = 'latest'
     }
     stages{
         stage('checkout'){
@@ -12,6 +13,7 @@ pipeline{
                 git 'https://github.com/Emmy-S-300/git-tutorial3.git'
             }
         }
+
         stage('Tag the image'){
             steps{
                 script{
@@ -23,9 +25,7 @@ pipeline{
             steps{
                 withAWS(region: "${env.AWS_REGION}", credentials: 'aws-creds'){
                     powershell """
-                    $ecrLogin = aws ecr get-login.password --region ${env.AWS_REGION}
-
-                    docker login --username AWS --password-stdin $ecrLogin https://745490702538.dkr.ecr.us-east-2.amazonaws.com/test
+                    aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin 745490702538.dkr.ecr.${env.AWS_REGION}.amazonaws.com
                     """
                 }
             }
@@ -33,12 +33,12 @@ pipeline{
         stage('Build Docker Image'){
             steps{
                 powershell """
-                docker build -t $env.IMAGE_NAME:${env.IMAGE_TAG} .
-                docker tag $env.IMAGE_NAME:${env.IMAGE_TAG} 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:latest
+                docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} .
+                docker tag ${env.IMAGE_NAME}:${env.IMAGE_TAG} 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:latest
                 """
             }
         }
-        stage('push ot ECR'){
+        stage('push to ECR'){
             steps{
                 powershell """
                 docker push 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:latest
