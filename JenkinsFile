@@ -1,38 +1,47 @@
-pipeline {
+pipeline{
     agent any
-
-    environment {
-        IMAGE_NAME = 'eschonau/git-tutorial3'
+    environment{
+        AWS_REGION = 'ap-south-1'
+        IMAGE_NAME = 'git-tutorial3'
+        REPO_NAME = 'test'
     }
-
-    stages {
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
+    stages{
+        stage('checkout'){
+            steps{
+                git 'https://github.com/Emmy-S-300/git-tutorial3'
             }
         }
-
-        stage('Checkout') {
-            steps {
-                checkout scm
+        stage('Tag the image){
+            steps{
+                script{
+                    IMAGE_TAG = 'latest'
+                }
             }
         }
+        stage('Login to ECR'){
+            steps{
+                withAWS(region: "${env.AWS_REGION}", credentials: 'aws-creds'){
+                    powershell """
+                    $ecrLogin = aws ecr get-login.password --region $env.AWS_REGION
 
-        stage('Build Docker Image') {
-            steps {
-                sh "docker build -t $IMAGE_NAME:latest ."
-            }
-        }
-
-        stage('Push to Dockerhub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerFromTutorial', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push $IMAGE_NAME:latest
-                        docker logout
+                    docker login --username AWS --password $ecrLogin https://745490702538.dkr.ecr.us-east-2.amazonaws.com/test
                     """
                 }
+            }
+        }
+        stage('Build Docker Image'){
+            steps{
+                powershell """
+                docker build -t $env.IMAGE_NAME:$env.IMAGE_TAG .
+                docker tag $env.IMAGE_NAME:$env.IMAGE_TAG 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:latest
+                """
+            }
+        }
+        stage('push ot ECR'){
+            steps{
+                powershell """
+                docker push 745490702538.dkr.ecr.us-east-2.amazonaws.com/test:latest
+                """
             }
         }
     }
