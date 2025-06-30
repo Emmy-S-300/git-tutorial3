@@ -1,5 +1,6 @@
 pipeline{
     agent any
+
     environment{
         AWS_REGION = 'ap-south-1'
         IMAGE_NAME = 'git-tutorial3'
@@ -8,10 +9,10 @@ pipeline{
     stages{
         stage('checkout'){
             steps{
-                git 'https://github.com/Emmy-S-300/git-tutorial3'
+                git 'https://github.com/Emmy-S-300/git-tutorial3.git'
             }
         }
-        stage('Tag the image){
+        stage('Tag the image'){
             steps{
                 script{
                     IMAGE_TAG = 'latest'
